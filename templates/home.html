@@ -1,0 +1,144 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+   <form action="{% url 'redirect_example' %}" method="post">
+   {% csrf_token %}
+   {{ form.non_field_errors }}
+   <div class='container'>
+      <div class='row' style="padding-top:20px;">
+	 <div class='col-sm-6'>
+            <div class='fieldWrapper'>
+               {{ form.no_preg.errors }}
+	       <label for="{{ form.no_preg.id_for_label}}">
+	          Number of Preg.:&nbsp;
+	       </label>
+	       {{ form.no_preg }}
+             </div>
+	  </div>
+	  <div class='col-sm-6'>
+	     <div class='fieldWrapper'>
+	        {{ form.glu.errors }}
+	        <label for="{{form.glu.id_for_label}}">
+	           Plasma Glu Conc.:&nbsp;
+	        </label>
+		{{ form.glu }}
+             </div>
+	  </div>
+      </div>
+      <div class='row' style="padding-top:20px;">
+         <div class='col-sm-6'>
+	    <div class='fieldWrapper'>
+	       {{ form.bp.errors }}
+	       <label for="{{form.bp.id_for_label}}">
+	          Blood Pressure(mmHg):&nbsp;
+	       </label>
+	       {{ form.bp }}
+	    </div>
+         </div>
+         <div class='col-sm-6'>
+            <div class="fieldWrapper">
+               {{form.st.errors}}
+	       <label for="{{form.st.id_for_label}}">
+	          Skin Thickness(mm):&nbsp;
+	       </label>
+	       {{form.st}}
+	    </div>
+	 </div>
+      </div>
+      <div class='row' style="padding-top:20px;">
+         <div class="col-sm-6">
+            <div class="fieldWrapper">
+	       {{form.isl.errors}}
+	       <label for="{{form.isl.id_for_label}}">
+	          Insulin(mu U/ml):&nbsp;
+	       </label>
+	       {{form.isl}}
+            </div>
+         </div>
+	 <div class="col-sm-6">
+            <div class="fieldWrapper">
+               {{form.bmi.errors}}
+	       <label for="{{form.bmi.id_for_label}}">
+	          Body Mass Index(kg/m<sup>2</sup>):&nbsp;
+	       </label>
+	       {{form.bmi}}
+	    </div>
+	 </div>
+      </div>
+      <div class='row' style="padding-top:20px;">
+         <div class='col-sm-6'>
+            <div class="fieldWrapper">
+               {{form.dpf.errors}}
+	       <label for="{{form.dpf.id_for_label}}">
+                  Diabetes Ped. Func.:&nbsp; 
+	       </label>
+	       {{form.dpf}}
+	    </div>
+         </div>
+	 <div class="col-sm-6">
+            <div class="fieldWrapper">
+               {{form.age.errors}}
+	       <label for="{{form.age.id_for_label}}">
+	          Age:&nbsp;
+	       </label>
+	       {{form.age}}
+	    </div>
+         </div>
+      </div>
+      <div style='text-align:center;padding-top:30px;'>
+         <button type="submit" value='diagnose' 
+		 class="btn-primary"> Diagnose
+	 </button>
+	 {% if not data.any %}
+         <button disabled>
+            Visualize
+         </button>
+	 {% endif %}
+	 {% if data.any %}
+	 <button class="btn-success" onclick="displayGraph()">
+               Visualize
+         </button>
+	 {% endif %}
+      </div>
+   </div>
+   </form>
+   <hr>
+   <p style="padding-top:30px;"></p>
+   <div class="container">
+   <div class="row">
+   <div class="col-sm-6">
+   {% if predClass == 0 %}
+   <h4>Result</h4>
+   <p>You have {{probability}}% chance of not being diabetic</p>
+   {% endif %}
+   {% if predClass == 1 %}
+   <h4>Result</h4>
+   <p>You have {{probability}}% chance of being diabetic</p>
+   {% endif %}
+   </div>
+   <div class="col-sm-6" id = "showgraph">
+	   {% if display == 1 %}
+	      {{graph}}
+	   {% endif %}
+	   {% if display == 0 %}
+	   {% endif %}
+	   <!--<img src="{% static 'graph.png' %}" height=200 width=350 alt="Pie chart of prediction" style="padding-left: 5px;">-->
+   </div>
+   </div>
+   </div>
+	<script>
+	function displayGraph(){
+		/*var graph = document.createElement("img");
+		graph.setAttribute("src", "{% static 'graph.png' %}");
+		graph.setAttribute("height", 200);
+		graph.setAttribute("width", 350);
+		graph.setAttribute("alt", "Pie chart of prediction");
+                var showgraph = document.getElementById("showgraph");
+                showgraph.appendChild(graph);*/
+		//{{display}} = 1;
+	        "{{display}}" = 1;
+		//document.getElementById("showgraph").style.display = "block";
+		};
+	}
+	</script>
+{% endblock %}
