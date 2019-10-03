@@ -14,6 +14,7 @@ from sklearn.metrics import confusion_matrix
 from sklearn.metrics import precision_score, recall_score
 from sklearn.metrics import roc_auc_score, roc_curve
 from sklearn.externals import joblib
+from . import settings
 
 """
 def test(request):
@@ -35,10 +36,11 @@ def test(request):
             dpf=form.cleaned_data["dpf"]
             age=form.cleaned_data["age"]
             data = np.array([[no_preg,glu,bp,st,isl,bmi,dpf,age]])
+            data = data.astype('float32')
             columns = ['Pregnancies', 'Glucose', 'BloodPressure', 'SkinThickness', 'Insulin', 'BMI', 'DiabetesPedigreeFunction', 'Age']
             df = pd.DataFrame(data, columns=columns)
             print(df.shape)
-            ddmodel = joblib.load('diabetesModel.pkl')
+            ddmodel = joblib.load(os.path.join(settings.BASE_DIR, 'diabetesModel.pkl'))
             pred = ddmodel.predict_proba(df)
             print(pred)
             predClass = pred.argmax()
@@ -46,20 +48,22 @@ def test(request):
             ## Create a plot
             predictions = [pred[0][0], pred[0][1]]
             labels = 'Non-Diabetic', 'Diabetic'
-            fig = plt.figure(figsize=(3,3))
-            colors = ['red', 'green']
+            #fig = plt.figure(figsize=(2,2))
+            fig, ax = plt.subplots(1,1, figsize=(3,2))
+            colors = ['aqua', '#FF0CCB']
             #explode=(0.5,0.5)
             autopct = '%1.1f%%'
-            plt.pie(predictions, labels = labels, colors=colors, autopct = autopct, shadow=True, startangle=90, rotatelabels=False)
-            plt.axis('equal')
+            ax.pie(predictions, labels = labels, frame = True, colors=colors, autopct = autopct, shadow=True, startangle=180, rotatelabels=False)
+            ax.axis('equal')
             #plt.title('Pie chart showing the prediction statistics', pad=5.5)
             graph = mpld3.fig_to_html(fig)
             display = 0
             #plt.savefig('static/graph.png')
-            #path = os.path.abspath('../template')
+            #path = os.path.abspath('../templates')
             #os.system('touch {}/graph.html'.format(path))
             #f = open(path+'/graph.html', 'w')
-            #f.write(graph)
+            with open(os.path.join(settings.BASE_DIR, 'templates/graph.html'), 'w') as f:
+                f.write(graph)
             #f.close()
             print(predproba)
             return render(request, "home.html", {'predClass': predClass, 'probability': predproba, 'form': form, 'data': data, 'display': display, 'graph': graph})

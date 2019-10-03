@@ -19,6 +19,6 @@ from .views import test
 
 urlpatterns = [
     path('', test, name='home'),
-    path('success/', test, name='redirect_example'),
+    path('result/', test, name='redirect_example'),
     path('admin/', admin.site.urls),
 ]
